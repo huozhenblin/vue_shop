@@ -6,16 +6,31 @@
         <img src="../assets/logo.png" alt />
       </div>
       <!-- 登录表单区 -->
-      <el-form ref="loginFormRef" :model="loginform" :rules="loginRules" label-width="0px" class="login_form">
-        <el-form-item  prop="username">
-          <el-input v-model="loginform.username" prefix-icon="iconfont icon-user" placeholder="请输入账号"></el-input>
+      <el-form
+        ref="loginFormRef"
+        :model="loginform"
+        :rules="loginRules"
+        label-width="0px"
+        class="login_form"
+      >
+        <el-form-item prop="username">
+          <el-input
+            v-model="loginform.username"
+            prefix-icon="iconfont icon-user"
+            placeholder="请输入账号"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginform.password" prefix-icon="iconfont icon-3702mima" placeholder="请输入密码" type="password"></el-input>
+          <el-input
+            v-model="loginform.password"
+            prefix-icon="iconfont icon-3702mima"
+            placeholder="请输入密码"
+            type="password"
+          ></el-input>
         </el-form-item>
         <!-- 按钮区 -->
         <el-form-item class="btns">
-          <el-button type="primary"  @click="login">登录</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
           <el-button type="info" @click="resetFormFields">重置</el-button>
         </el-form-item>
       </el-form>
@@ -33,39 +48,44 @@ export default {
         password: ""
       },
       // 表单验证规则
-      loginRules:{
+      loginRules: {
         username: [
-            { required: true, message: '请输入账号', trigger: 'blur' },
-            { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '请输入账号密码', trigger: 'change' },
-            { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
-          ]
+          { required: true, message: "请输入账号", trigger: "blur" },
+          { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请输入账号密码", trigger: "change" },
+          { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" }
+        ]
       }
     };
   },
   methods: {
     // 点击重置按钮
-    resetFormFields(){
+    resetFormFields() {
       // console.log(this)
-      this.$refs.loginFormRef.resetFields()
+      this.$refs.loginFormRef.resetFields();
     },
-    login(){
-      this.$refs.loginFormRef.validate(async (valid) => {
-          if (valid) {
-            const loh=await this.$http.post("login",this.loginform)
-            console.log(loh)
-            if (loh.data.meta.status != 200) {
-              alert('login false!');
-            }else{
-              alert('login success!');
-            }           
+    login() {
+      this.$refs.loginFormRef.validate(async valid => {
+        if (valid) {
+          // 后端请求 账号密码是否正确
+          const loh = await this.$http.post("login", this.loginform);
+          console.log(loh);
+
+          if (loh.data.meta.status != 200) {
+            return this.$message.error("登陆失败");
+            // alert('login false!');
           } else {
-            alert('login false!');
-            return false;
+            this.$message({
+              message: "恭喜你，登陆成功",
+              type: "success"
+            });
           }
-        });
+          window.sessionStorage.setItem("token", loh.data.data.token);
+          this.$router.push("/home")
+        }
+      });
     }
   },
   components: {}
