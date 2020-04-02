@@ -69,10 +69,7 @@ export default {
     login() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
-        // 后端请求 账号密码是否正确
         const loh = await this.$http.post("login", this.loginform);
-        console.log(loh);
-        // console.log(loh.data.meta.status != 200)
         if (loh.data.meta.status != 200) return this.$message.error("登陆失败");
         this.$message.success("登陆成功");
         window.sessionStorage.setItem("token", loh.data.data.token);
