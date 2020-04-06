@@ -9,6 +9,14 @@ import './assets/css/global.css'
 
 import axios from 'axios'
 
+axios.interceptors.request.use(function (config) {
+      console.log(config)
+      config.headers.Authorization = window.sessionStorage.getItem('token')
+      return config;
+    }, function (err) {
+console.log(err)
+
+})
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false

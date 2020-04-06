@@ -70,6 +70,7 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
         const loh = await this.$http.post("login", this.loginform);
+        console.log(loh)
         if (loh.data.meta.status != 200) return this.$message.error("登陆失败");
         this.$message.success("登陆成功");
         window.sessionStorage.setItem("token", loh.data.data.token);
